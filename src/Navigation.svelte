@@ -35,7 +35,7 @@
   }
 
   collectionData(
-    db.collection('entries').where('uid', '==', userId).where('end', '==', null),
+    db.collection('entries').where('uid', '==', userId).where('end', '==', null).orderBy('start', 'desc'),
     'id'
   ).subscribe(entries => {
     const current = entries[0]

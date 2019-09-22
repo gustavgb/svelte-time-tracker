@@ -9,9 +9,9 @@
   let entries = []
 
   collectionData(
-    db.collection('entries').where('uid', '==', userId),
+    db.collection('entries').where('uid', '==', userId).orderBy('start', 'desc'),
     'id'
-  ).subscribe(e => entries = e);
+  ).subscribe(e => entries = e.filter(e => e.end));
 </script>
 
 <style>
