@@ -1,8 +1,8 @@
 <script>
   import { fade } from 'svelte/transition'
-  import { db, auth } from './firebase'
+  import { db } from './firebase'
   import { collectionData } from 'rxfire/firestore'
-  import format from 'humanize-duration'
+  import Entry from './Entry.svelte'
 
   export let userId = '';
 
@@ -14,11 +14,21 @@
   ).subscribe(e => entries = e);
 </script>
 
-<main transition:fade="{{ duration: 500 }}">
+<style>
+  main {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  h2 {
+    margin: 32px 0 16px;
+  }
+</style>
+
+<main in:fade="{{ duration: 500 }}">
   <h2>Entries</h2>
   {#each entries as entry}
-    <div class="entry">
-      {format(entry.end - entry.start, { round: true })}
-    </div>
+    <Entry {...entry} />
   {/each}
 </main>

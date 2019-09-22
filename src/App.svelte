@@ -7,12 +7,16 @@
 
 	export let name = 'Gustav';
 
-	let user;
+	let uid;
 	let ready = false;
 
 	const unsubscribe = authState(auth).subscribe(u => {
 		ready = true;
-		user = u;
+		if (u) {
+			uid = u.uid;
+		} else {
+			uid = null;
+		}
 	});
 
 	function login() {
@@ -25,22 +29,29 @@
 </script>
 
 <style>
-	h1 {
-		color: purple;
-	}
-
 	:global(body) {
 		margin: 0;
 		padding: 0;
+
+		background-color: #f8f7f8;
 	}
 
 	:global(body) > :global(*) {
 		box-sizing: border-box;
 	}
+
+	p {
+		text-align: center;
+		margin: 100px 0;
+	}
 </style>
 
 {#if ready}
-	<Navigation userId={user.uid} {login} {logout} />
+	<Navigation userId={uid} {login} {logout} />
 
-	<History userId={user.uid} />
+  {#if !uid}
+    <p>Login to see your entries.</p>
+  {:else}
+		<History userId={uid} />
+	{/if}
 {/if}
