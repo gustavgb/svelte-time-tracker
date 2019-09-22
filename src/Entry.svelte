@@ -11,6 +11,7 @@
   export let id = ''
 
   let edit = false;
+  let el = null
   let error = ''
 
   let entries = []
@@ -50,24 +51,33 @@
     return true
   }
 
+  function handleClose (ev2) {
+    if (!el.contains(ev2.target) && handleSave()) {
+      error = ''
+      edit = false
+      document.removeEventListener('click', handleClose);
+    }
+  }
+
   function handleEdit (ev) {
-    const el = ev.target
+    el = ev.target
 
     if (!el.classList.contains('entry')) {
       return
     }
 
-    function handleClose (ev2) {
-      if (!el.contains(ev2.target) && handleSave()) {
-        error = ''
-        edit = false
-        document.removeEventListener('click', handleClose);
-      }
-    }
-
     document.addEventListener('click', handleClose);
 
     edit = true
+  }
+
+  function handleDelete () {
+    if (confirm('Do you want to delete this entry?')) {
+      edit = false;
+      error = ''
+      document.removeEventListener('click', handleClose);
+      db.collection('entries').doc(id).delete()
+    }
   }
 </script>
 
@@ -110,7 +120,7 @@
   }
 </style>
 
-<div class="entry" on:click={handleEdit} transition:fade="{{ duration: 500 }}">
+<div class="entry" on:click={handleEdit} in:fade="{{ duration: 500 }}">
   <div class="from">
     From
     {#if edit}
@@ -130,6 +140,10 @@
   <div class="duration">
     {format(end - start, { round: true })}
   </div>
+
+  {#if edit}
+    <button on:click={handleDelete}>Delete this entry</button>
+  {/if}
 
   <span class="error">{error}</span>
 </div>

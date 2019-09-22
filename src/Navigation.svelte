@@ -16,8 +16,6 @@
   let currentEntry
 
   function startTime () {
-    console.log('start time')
-
     db.collection('entries').add({
       uid: userId,
       start: Date.now(),
@@ -27,7 +25,6 @@
 
   function stopTime () {
     if (currentEntry) {
-      console.log('stop time')
       db.collection('entries').doc(currentEntry).update({
         end: Date.now()
       })
